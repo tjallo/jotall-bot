@@ -14,7 +14,7 @@ import {
 
 export const PING_COMMAND: RESTPostAPIApplicationCommandsJSONBody = {
   name: Commands.Ping,
-  description: "Replies with Pong!",
+  description: "Replies with Pong",
   type: ApplicationCommandType.ChatInput,
   integration_types: [
     ApplicationIntegrationType.GuildInstall,
@@ -35,7 +35,7 @@ export function handlePing() {
       components: [
         {
           type: MessageComponentTypes.TEXT_DISPLAY,
-          content: `pong!`,
+          content: `pong`,
         },
       ],
     },
