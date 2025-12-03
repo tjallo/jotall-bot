@@ -1,9 +1,10 @@
 services:
   jotall-bot:
-    image: ghcr.io/tjallo/jotall-bot:0.0.4
+    image: ghcr.io/tjallo/jotall-bot:0.0.5
     volumes:
       - ./tmp:/app/tmp
       - ./log:/app/log
+      - ./data:/app/data
     ports:
       - 3000:3000
     environment:
