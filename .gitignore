@@ -143,3 +143,4 @@ tmp/
 data/
 log/
 *.db
+data/
