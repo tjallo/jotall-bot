@@ -14,3 +14,5 @@ export const PUBLIC_KEY = getEnvVar("PUBLIC_KEY");
 
 export const TMP_FOLDER = path.join(Deno.cwd(), "tmp");
 export const COMMAND_HASH_FILE = path.join(TMP_FOLDER, "command_hash.txt");
+
+export const PORT = 3000;

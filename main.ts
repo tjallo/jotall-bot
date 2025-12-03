@@ -1,9 +1,72 @@
-import { TMP_FOLDER } from "./src/consts/config.ts";
+import { PORT, PUBLIC_KEY, TMP_FOLDER } from "./src/consts/config.ts";
 import { registerCommands } from "./src/helpers/register.ts";
+import {
+  InteractionResponseFlags,
+  InteractionResponseType,
+  InteractionType,
+  MessageComponentTypes,
+  verifyKeyMiddleware,
+} from "discord-interactions";
 
-async function main() {
+import express from "express";
+
+function server() {
+  const app = express();
+
+  app.post(
+    "/interactions",
+    verifyKeyMiddleware(PUBLIC_KEY),
+    function (req, res) {
+      const { _id, type, data } = req.body;
+
+      if (type === InteractionType.PING) {
+        return res.send({ type: InteractionResponseType.PONG });
+      }
+
+      if (type === InteractionType.APPLICATION_COMMAND) {
+        const { name } = data;
+
+        // "test" command
+        if (name === "ping") {
+          // Send a message into the channel where command was triggered from
+          return res.send({
+            type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+            data: {
+              flags: InteractionResponseFlags.IS_COMPONENTS_V2,
+              components: [
+                {
+                  type: MessageComponentTypes.TEXT_DISPLAY,
+                  content: `pong!`,
+                },
+              ],
+            },
+          });
+        }
+
+        console.error(`unknown command: ${name}`);
+        return res.status(400).json({ error: "unknown command" });
+      }
+
+      console.error("unknown interaction type", type);
+      return res.status(400).json({ error: "unknown interaction type" });
+    },
+  );
+
+  return app;
+}
+
+async function boot(): Promise<void> {
   Deno.mkdirSync(TMP_FOLDER, { recursive: true });
   await registerCommands();
+}
+
+async function main(): Promise<void> {
+  await boot();
+
+  const app = server();
+  app.listen(PORT, () => {
+    console.log("Listening on port", PORT);
+  });
 }
 
 if (import.meta.main) {
