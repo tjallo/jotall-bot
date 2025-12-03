@@ -17,6 +17,8 @@ export const COMMAND_HASH_FILE = path.join(TMP_DIR, "command_hash.txt");
 
 export const LOG_DIR = path.join(Deno.cwd(), "log");
 
+export const DATA_DIR = path.join(Deno.cwd(), "data");
+
 export const PORT = 3000;
 
 const text = Deno.readTextFileSync("deno.json");

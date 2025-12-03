@@ -1,11 +1,24 @@
+import type {
+  APIApplicationCommandInteractionData,
+  APIGuildMember,
+  APIUser,
+} from "discord-api-types/v10";
 import { Commands } from "../consts/commands.ts";
 import { handlePing } from "./util.ts";
-import type { APIApplicationCommandInteractionData } from "discord-api-types/v10";
+import { USER_SERVICE } from "../db/init.ts";
 
 export function handleApplicationCommands(
   data: APIApplicationCommandInteractionData,
+  user?: APIUser,
+  member?: APIGuildMember,
 ) {
   const { name } = data;
+
+  const commandUser = member?.user ?? user;
+
+  if (commandUser) {
+    USER_SERVICE.upsertUser(commandUser);
+  }
 
   switch (name) {
     case Commands.Ping:
