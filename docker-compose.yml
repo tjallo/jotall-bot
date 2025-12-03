@@ -1,0 +1,9 @@
+services:
+  jotall-bot:
+    image: ghcr.io/tjallo/jotall-bot:0.0.1
+    volumes:
+      - ./tmp:/app/tmp
+    environment:
+      APP_ID: "<YOUR_APP_ID>"
+      DISCORD_TOKEN: "<YOUR_DISCORD_TOKEN>"
+      PUBLIC_KEY: "<YOUR_PUBLIC_KEY>"
