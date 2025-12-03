@@ -1,6 +1,6 @@
 services:
   jotall-bot:
-    image: ghcr.io/tjallo/jotall-bot:0.0.3
+    image: ghcr.io/tjallo/jotall-bot:0.0.4
     volumes:
       - ./tmp:/app/tmp
       - ./log:/app/log
