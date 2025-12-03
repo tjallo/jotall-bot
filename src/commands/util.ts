@@ -2,16 +2,15 @@ import {
   ApplicationCommandType,
   ApplicationIntegrationType,
   InteractionContextType,
+  InteractionResponseType,
   RESTPostAPIApplicationCommandsJSONBody,
 } from "discord-api-types/v10";
 
+import { Commands } from "../consts/commands.ts";
 import {
   InteractionResponseFlags,
-  InteractionResponseType,
   MessageComponentTypes,
 } from "discord-interactions";
-
-import { Commands } from "../consts/commands.ts";
 
 export const PING_COMMAND: RESTPostAPIApplicationCommandsJSONBody = {
   name: Commands.Ping,
@@ -30,7 +29,7 @@ export const PING_COMMAND: RESTPostAPIApplicationCommandsJSONBody = {
 
 export function handlePing() {
   return {
-    type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+    type: InteractionResponseType.ChannelMessageWithSource,
     data: {
       flags: InteractionResponseFlags.IS_COMPONENTS_V2,
       components: [

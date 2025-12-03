@@ -1,3 +1,5 @@
+import express from "express";
+import { verifyKeyMiddleware } from "discord-interactions";
 import { handleApplicationCommands } from "./src/commands/handler.ts";
 import { PORT, PUBLIC_KEY, TMP_FOLDER } from "./src/consts/config.ts";
 import { Log } from "./src/helpers/log.ts";
@@ -5,10 +7,7 @@ import { registerCommands } from "./src/helpers/register.ts";
 import {
   InteractionResponseType,
   InteractionType,
-  verifyKeyMiddleware,
-} from "discord-interactions";
-
-import express from "express";
+} from "discord-api-types/v10";
 
 function server() {
   const app = express();
@@ -19,11 +18,11 @@ function server() {
     function (req, res) {
       const { _id, type, data } = req.body;
 
-      if (type === InteractionType.PING) {
-        return res.send({ type: InteractionResponseType.PONG });
+      if (type === InteractionType.Ping) {
+        return res.send({ type: InteractionResponseType.Pong });
       }
 
-      if (type === InteractionType.APPLICATION_COMMAND) {
+      if (type === InteractionType.ApplicationCommand) {
         const { status, body } = handleApplicationCommands(data);
 
         if (status !== 200) {
