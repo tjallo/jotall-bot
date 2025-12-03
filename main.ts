@@ -1,7 +1,7 @@
 import express from "express";
 import { verifyKeyMiddleware } from "discord-interactions";
 import { handleApplicationCommands } from "./src/commands/handler.ts";
-import { PORT, PUBLIC_KEY, TMP_FOLDER } from "./src/consts/config.ts";
+import { PORT, PUBLIC_KEY, TMP_DIR } from "./src/consts/config.ts";
 import { Log } from "./src/helpers/log.ts";
 import { registerCommands } from "./src/helpers/register.ts";
 import {
@@ -50,7 +50,7 @@ function server() {
 }
 
 async function boot(): Promise<void> {
-  Deno.mkdirSync(TMP_FOLDER, { recursive: true });
+  Deno.mkdirSync(TMP_DIR, { recursive: true });
   await registerCommands();
 }
 
