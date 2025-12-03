@@ -29,15 +29,18 @@ export const PING_COMMAND: RESTPostAPIApplicationCommandsJSONBody = {
 
 export function handlePing() {
   return {
-    type: InteractionResponseType.ChannelMessageWithSource,
-    data: {
-      flags: InteractionResponseFlags.IS_COMPONENTS_V2,
-      components: [
-        {
-          type: MessageComponentTypes.TEXT_DISPLAY,
-          content: `pong`,
-        },
-      ],
+    status: 200,
+    body: {
+      type: InteractionResponseType.ChannelMessageWithSource,
+      data: {
+        flags: InteractionResponseFlags.IS_COMPONENTS_V2,
+        components: [
+          {
+            type: MessageComponentTypes.TEXT_DISPLAY,
+            content: `pong`,
+          },
+        ],
+      },
     },
   };
 }

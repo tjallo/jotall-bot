@@ -4,6 +4,7 @@ import { Log } from "./log.ts";
 import { encodeHex } from "@std/encoding";
 import { discordRequest } from "./discord_request.ts";
 import { APP_ID, COMMAND_HASH_FILE, DISCORD_TOKEN } from "../consts/config.ts";
+import { DICE_COMMAND } from "../commands/games.ts";
 
 async function commandsNeedToBeRegistered(
   commands: Array<RESTPostAPIApplicationCommandsJSONBody>,
@@ -34,6 +35,7 @@ async function commandsNeedToBeRegistered(
 export async function registerCommands() {
   const COMMANDS_TO_REGISTER: Array<RESTPostAPIApplicationCommandsJSONBody> = [
     PING_COMMAND,
+    DICE_COMMAND,
   ];
 
   const needsToBeRegistered = await commandsNeedToBeRegistered(
