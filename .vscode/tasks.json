@@ -4,7 +4,7 @@
     {
       "type": "shell",
       "label": "deno run",
-      "command": "deno run --allow-env --allow-net --env-file main.ts",
+      "command": "deno run --allow-env --allow-net --allow-read --allow-write --env-file main.ts",
       "group": "test",
       "presentation": {
         "reveal": "always",
@@ -14,7 +14,7 @@
     {
       "type": "shell",
       "label": "deno watch",
-      "command": "deno run --watch --allow-env --allow-net --env-file main.ts",
+      "command": "deno run --watch --allow-env --allow-net --allow-read --allow-write --env-file main.ts",
       "group": "test",
       "presentation": {
         "reveal": "always",
