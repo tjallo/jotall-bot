@@ -31,14 +31,19 @@ function server() {
     "/interactions",
     verifyKeyMiddleware(PUBLIC_KEY),
     function (req, res) {
-      const { _id, type, data } = req.body;
+      const interaction = req.body;
 
-      if (type === InteractionType.Ping) {
+      if (interaction.type === InteractionType.Ping) {
         return res.send({ type: InteractionResponseType.Pong });
       }
 
-      if (type === InteractionType.ApplicationCommand) {
-        const { status, body } = handleApplicationCommands(data);
+      if (interaction.type === InteractionType.ApplicationCommand) {
+        // Pass both data and user/member info to your handler
+        const { status, body } = handleApplicationCommands(
+          interaction.data,
+          interaction.user,
+          interaction.member,
+        );
 
         if (status !== 200) {
           Log.error(body);
@@ -48,7 +53,7 @@ function server() {
         return res.send(body);
       }
 
-      Log.error("unknown interaction type", type);
+      Log.error("unknown interaction type", interaction.type);
       return res.status(400).json({ error: "unknown interaction type" });
     },
   );
