@@ -1,7 +1,12 @@
 import express from "express";
 import { verifyKeyMiddleware } from "discord-interactions";
 import { handleApplicationCommands } from "./src/commands/handler.ts";
-import { PORT, PUBLIC_KEY, TMP_FOLDER } from "./src/consts/config.ts";
+import {
+  JOTALL_VERSION,
+  PORT,
+  PUBLIC_KEY,
+  TMP_DIR,
+} from "./src/consts/config.ts";
 import { Log } from "./src/helpers/log.ts";
 import { registerCommands } from "./src/helpers/register.ts";
 import {
@@ -13,7 +18,13 @@ function server() {
   const app = express();
 
   app.get("/health", (_req, res) => {
-    return res.status(200).json({ "healthy": true });
+    return res.status(200).json({
+      "healthy": true,
+      "Jotall Bot version": JOTALL_VERSION,
+      "deno": Deno.version.deno,
+      "typescript": Deno.version.typescript,
+      "v8": Deno.version.v8,
+    });
   });
 
   app.post(
@@ -50,7 +61,7 @@ function server() {
 }
 
 async function boot(): Promise<void> {
-  Deno.mkdirSync(TMP_FOLDER, { recursive: true });
+  Deno.mkdirSync(TMP_DIR, { recursive: true });
   await registerCommands();
 }
 
