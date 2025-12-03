@@ -16,3 +16,7 @@ export const TMP_FOLDER = path.join(Deno.cwd(), "tmp");
 export const COMMAND_HASH_FILE = path.join(TMP_FOLDER, "command_hash.txt");
 
 export const PORT = 3000;
+
+const text = Deno.readTextFileSync("deno.json");
+const config = JSON.parse(text);
+export const JOTALL_VERSION = config.version;

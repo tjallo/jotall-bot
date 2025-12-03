@@ -1,3 +1,4 @@
+import { JOTALL_VERSION } from "../consts/config.ts";
 import { Log } from "./log.ts";
 
 export async function discordRequest(
@@ -11,7 +12,8 @@ export async function discordRequest(
     headers: {
       Authorization: `Bot ${discordToken}`,
       "Content-Type": "application/json; charset=UTF-8",
-      "User-Agent": "Jotall Bot",
+      "User-Agent":
+        `Jotall Bot version: ${JOTALL_VERSION} - deno: ${Deno.version.deno}, typescript: ${Deno.version.typescript}, v8: ${Deno.version.v8}`,
     },
     ...options,
   });
