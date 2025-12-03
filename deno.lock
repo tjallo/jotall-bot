@@ -3,6 +3,7 @@
   "specifiers": {
     "jsr:@std/assert@1": "1.0.16",
     "jsr:@std/internal@^1.0.12": "1.0.12",
+    "npm:discord-api-types@~0.38.36": "0.38.36",
     "npm:discord-interactions@^4.4.0": "4.4.0",
     "npm:express@^5.2.1": "5.2.1"
   },
@@ -76,6 +77,9 @@
     },
     "depd@2.0.0": {
       "integrity": "sha512-g7nH6P6dyDioJogAAGprGpCtVImJhpPk/roCzdb3fIh61/s/nPsfR6onyMwkCAR/OlC3yBC0lESvUoQEAssIrw=="
+    },
+    "discord-api-types@0.38.36": {
+      "integrity": "sha512-qrbUbjjwtyeBg5HsAlm1C859epfOyiLjPqAOzkdWlCNsZCWJrertnETF/NwM8H+waMFU58xGSc5eXUfXah+WTQ=="
     },
     "discord-interactions@4.4.0": {
       "integrity": "sha512-jjJx8iwAeJcj8oEauV43fue9lNqkf38fy60aSs2+G8D1nJmDxUIrk08o3h0F3wgwuBWWJUZO+X/VgfXsxpCiJA=="
@@ -398,6 +402,7 @@
   "workspace": {
     "dependencies": [
       "jsr:@std/assert@1",
+      "npm:discord-api-types@~0.38.36",
       "npm:discord-interactions@^4.4.0",
       "npm:express@^5.2.1"
     ]
