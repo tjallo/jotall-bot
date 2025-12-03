@@ -1,10 +1,10 @@
+import { handleApplicationCommands } from "./src/commands/handler.ts";
 import { PORT, PUBLIC_KEY, TMP_FOLDER } from "./src/consts/config.ts";
+import { Log } from "./src/helpers/log.ts";
 import { registerCommands } from "./src/helpers/register.ts";
 import {
-  InteractionResponseFlags,
   InteractionResponseType,
   InteractionType,
-  MessageComponentTypes,
   verifyKeyMiddleware,
 } from "discord-interactions";
 
@@ -24,30 +24,17 @@ function server() {
       }
 
       if (type === InteractionType.APPLICATION_COMMAND) {
-        const { name } = data;
+        const { status, body } = handleApplicationCommands(data);
 
-        // "test" command
-        if (name === "ping") {
-          // Send a message into the channel where command was triggered from
-          return res.send({
-            type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-            data: {
-              flags: InteractionResponseFlags.IS_COMPONENTS_V2,
-              components: [
-                {
-                  type: MessageComponentTypes.TEXT_DISPLAY,
-                  content: `pong!`,
-                },
-              ],
-            },
-          });
+        if (status !== 200) {
+          Log.error(body);
+          return res.status(status).json(body);
         }
 
-        console.error(`unknown command: ${name}`);
-        return res.status(400).json({ error: "unknown command" });
+        return res.send(body);
       }
 
-      console.error("unknown interaction type", type);
+      Log.error("unknown interaction type", type);
       return res.status(400).json({ error: "unknown interaction type" });
     },
   );
