@@ -12,6 +12,10 @@ import {
 function server() {
   const app = express();
 
+  app.get("/health", (_req, res) => {
+    return res.status(200).json({ "healthy": true });
+  });
+
   app.post(
     "/interactions",
     verifyKeyMiddleware(PUBLIC_KEY),
@@ -37,6 +41,10 @@ function server() {
       return res.status(400).json({ error: "unknown interaction type" });
     },
   );
+
+  app.use((_req, res) => {
+    return res.status(401).json({ error: "unauthorized" });
+  });
 
   return app;
 }

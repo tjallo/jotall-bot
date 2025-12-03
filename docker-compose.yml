@@ -1,11 +1,12 @@
 services:
   jotall-bot:
-    image: ghcr.io/tjallo/jotall-bot:0.0.2
+    image: ghcr.io/tjallo/jotall-bot:0.0.3
     volumes:
       - ./tmp:/app/tmp
+    ports:
+      - 3000:3000
     environment:
       APP_ID: "<YOUR_APP_ID>"
       DISCORD_TOKEN: "<YOUR_DISCORD_TOKEN>"
       PUBLIC_KEY: "<YOUR_PUBLIC_KEY>"
     restart: unless-stopped
-    
