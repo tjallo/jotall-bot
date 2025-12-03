@@ -1,6 +1,6 @@
 services:
   jotall-bot:
-    image: ghcr.io/tjallo/jotall-bot:0.0.1
+    image: ghcr.io/tjallo/jotall-bot:0.0.2
     volumes:
       - ./tmp:/app/tmp
     environment:
