@@ -3,10 +3,10 @@ import {
   ApplicationCommandType,
   ApplicationIntegrationType,
   InteractionContextType,
-  InteractionResponseType,
   RESTPostAPIApplicationCommandsJSONBody,
 } from "discord-api-types/v10";
 import { Commands } from "../consts/commands.ts";
+import { CommandResponse } from "./handler.ts";
 
 enum DiceOptions {
   Sides = "sides",
@@ -50,7 +50,7 @@ export function handleDiceCommand(
     >;
     type: ApplicationCommandType;
   },
-) {
+): CommandResponse {
   function getNumberOption(name: string, defaultValue: number): number {
     const option = data.options?.find((o) => o.name === name);
     if (!option) return defaultValue;
@@ -83,11 +83,5 @@ export function handleDiceCommand(
     ? `🎲 You rolled a d${sides} and got **${rolls[0]}**!`
     : `🎲 You rolled ${count}d${sides}: [${rollsString}] (total: **${total}**)`;
 
-  return {
-    status: 200,
-    body: {
-      type: InteractionResponseType.ChannelMessageWithSource,
-      data: { content },
-    },
-  };
+  return { content };
 }

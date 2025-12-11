@@ -3,13 +3,13 @@ import {
   ApplicationCommandType,
   ApplicationIntegrationType,
   InteractionContextType,
-  InteractionResponseType,
   RESTPostAPIApplicationCommandsJSONBody,
 } from "discord-api-types/v10";
 
 import { Commands } from "../consts/commands.ts";
 import { getMinecraftWS } from "../helpers/mc_server_mgmt_protocol_ws.ts";
 import { Log } from "../helpers/log.ts";
+import type { CommandResponse } from "./handler.ts";
 
 enum SubCommands {
   ListOnlinePlayers = "list-online-players",
@@ -58,11 +58,12 @@ export async function handleMinecraftCommand(data: {
     { name: string; type: ApplicationCommandOptionType; value: unknown }
   >;
   type: ApplicationCommandType;
-}) {
+}): Promise<CommandResponse> {
   const ws = getMinecraftWS();
 
   let content = "Unknown command.";
   const command = data.options?.at(0)?.name;
+
   switch (command) {
     case SubCommands.ListOnlinePlayers: {
       const players = await ws.getOnlinePlayers();
@@ -80,9 +81,10 @@ export async function handleMinecraftCommand(data: {
         ? `**Players on allow list (${allowList.length}):**\n• ${
           allowList.map((p) => p.name).join("\n• ")
         }`
-        : "No players online right now.";
+        : "No players on allow list.";
       break;
     }
+
     case SubCommands.GameRules: {
       const gameRules = await ws.getGameRules();
       content = gameRules.length
@@ -90,7 +92,6 @@ export async function handleMinecraftCommand(data: {
           gameRules.map((r) => `${r.key}: ${r.value}`).join("\n• ")
         }`
         : "No gamerules found for server.";
-
       break;
     }
 
@@ -98,11 +99,5 @@ export async function handleMinecraftCommand(data: {
       Log.error(`Unknown command found: ${command}`);
   }
 
-  return {
-    status: 200,
-    body: {
-      type: InteractionResponseType.ChannelMessageWithSource,
-      data: { content },
-    },
-  };
+  return { content };
 }

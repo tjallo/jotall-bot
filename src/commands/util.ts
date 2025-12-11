@@ -2,15 +2,11 @@ import {
   ApplicationCommandType,
   ApplicationIntegrationType,
   InteractionContextType,
-  InteractionResponseType,
   RESTPostAPIApplicationCommandsJSONBody,
 } from "discord-api-types/v10";
 
 import { Commands } from "../consts/commands.ts";
-import {
-  InteractionResponseFlags,
-  MessageComponentTypes,
-} from "discord-interactions";
+import { CommandResponse } from "./handler.ts";
 
 export const PING_COMMAND: RESTPostAPIApplicationCommandsJSONBody = {
   name: Commands.Ping,
@@ -27,22 +23,8 @@ export const PING_COMMAND: RESTPostAPIApplicationCommandsJSONBody = {
   ],
 };
 
-export function handlePing() {
-  return {
-    status: 200,
-    body: {
-      type: InteractionResponseType.ChannelMessageWithSource,
-      data: {
-        flags: InteractionResponseFlags.IS_COMPONENTS_V2,
-        components: [
-          {
-            type: MessageComponentTypes.TEXT_DISPLAY,
-            content: `pong`,
-          },
-        ],
-      },
-    },
-  };
+export function handlePing(): CommandResponse {
+  return { content: "Pong! 🏓" };
 }
 
 export const WHOAMI_COMMAND: RESTPostAPIApplicationCommandsJSONBody = {
@@ -60,25 +42,10 @@ export const WHOAMI_COMMAND: RESTPostAPIApplicationCommandsJSONBody = {
   ],
 };
 
-export function handleWhoAmICommand() {
+export function handleWhoAmICommand(): CommandResponse {
   const content = `**Contribute & Source**
 Check the code, report issues or contribute on GitHub: https://github.com/tjallo/jotall-bot
 
 Thanks for using Jotall — drop a feature request or bug report on the repo!`;
-
-  return {
-    status: 200,
-    body: {
-      type: InteractionResponseType.ChannelMessageWithSource,
-      data: {
-        flags: InteractionResponseFlags.IS_COMPONENTS_V2,
-        components: [
-          {
-            type: MessageComponentTypes.TEXT_DISPLAY,
-            content,
-          },
-        ],
-      },
-    },
-  };
+  return { content };
 }
