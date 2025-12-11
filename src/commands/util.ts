@@ -7,6 +7,7 @@ import {
 
 import { Commands } from "../consts/commands.ts";
 import { CommandResponse } from "./handler.ts";
+import { formatWhoAmI } from "../helpers/bot_formatters.ts";
 
 export const PING_COMMAND: RESTPostAPIApplicationCommandsJSONBody = {
   name: Commands.Ping,
@@ -43,10 +44,5 @@ export const WHOAMI_COMMAND: RESTPostAPIApplicationCommandsJSONBody = {
 };
 
 export function handleWhoAmICommand(): CommandResponse {
-  const content = `**Contribute & Source**
-Check the code, report issues or contribute on GitHub: https://github.com/tjallo/jotall-bot
-
-Thanks for using Jotall — drop a feature request or bug report on the repo!`;
-
-  return { content };
+  return { content: formatWhoAmI() };
 }
