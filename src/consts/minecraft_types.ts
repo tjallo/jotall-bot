@@ -9,7 +9,7 @@ export interface MinecraftTypedGameRule {
 }
 
 export interface MinecraftServerStatus {
-  players: Array<MinecraftPlayer>;
+  players?: Array<MinecraftPlayer>;
   started: boolean;
   version: MinecraftVersion;
 }
