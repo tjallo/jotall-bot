@@ -14,6 +14,7 @@ import { Log } from "../helpers/log.ts";
 enum SubCommands {
   ListOnlinePlayers = "list-online-players",
   AllowList = "get-allow-list",
+  GameRules = "get-game-rules",
 }
 
 const mappedSubCommands = [
@@ -24,6 +25,10 @@ const mappedSubCommands = [
   {
     name: SubCommands.AllowList,
     description: "Get players that are currently on the allow list",
+  },
+  {
+    name: SubCommands.GameRules,
+    description: "Get gamerules for server",
   },
 ];
 
@@ -76,6 +81,16 @@ export async function handleMinecraftCommand(data: {
           allowList.map((p) => p.name).join("\n• ")
         }`
         : "No players online right now.";
+      break;
+    }
+    case SubCommands.GameRules: {
+      const gameRules = await ws.getGameRules();
+      content = gameRules.length
+        ? `**Gamerules (${gameRules.length}):**\n• ${
+          gameRules.map((r) => `${r.key}: ${r.value}`).join("\n• ")
+        }`
+        : "No gamerules found for server.";
+
       break;
     }
 

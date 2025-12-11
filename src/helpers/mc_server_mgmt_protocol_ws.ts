@@ -1,5 +1,9 @@
 import { Config } from "../consts/config.ts";
 import { JsonRpcRequest, JsonRpcResponse } from "../consts/json_rpc.ts";
+import {
+  MinecraftPlayer,
+  MinecraftTypedGameRule,
+} from "../consts/minecraft_types.ts";
 
 import { Log } from "./log.ts";
 
@@ -110,7 +114,7 @@ class MinecraftServerManagementProtocolWS {
   }
 
   async getOnlinePlayers() {
-    const players = await this.rpc<Array<{ id: string; name: string }>>(
+    const players = await this.rpc<Array<MinecraftPlayer>>(
       "minecraft:players",
     );
 
@@ -126,7 +130,7 @@ class MinecraftServerManagementProtocolWS {
   }
 
   async getAllowList() {
-    const allowlist = await this.rpc<Array<{ id: string; name: string }>>(
+    const allowlist = await this.rpc<Array<MinecraftPlayer>>(
       "minecraft:allowlist",
     );
 
@@ -135,6 +139,22 @@ class MinecraftServerManagementProtocolWS {
         return -1;
       }
       if (a.name > b.name) {
+        return 1;
+      }
+      return 0;
+    });
+  }
+
+  async getGameRules() {
+    const gameRules = await this.rpc<Array<MinecraftTypedGameRule>>(
+      "minecraft:gamerules",
+    );
+
+    return gameRules.sort((a, b) => {
+      if (a.key < b.key) {
+        return -1;
+      }
+      if (a.key > b.key) {
         return 1;
       }
       return 0;
