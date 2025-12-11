@@ -4,7 +4,7 @@ import type {
   APIUserApplicationCommandInteractionData,
 } from "discord-api-types/v10";
 import { Commands } from "../consts/commands.ts";
-import { handlePing } from "./util.ts";
+import { handlePing, handleWhoAmICommand } from "./util.ts";
 import { USER_SERVICE } from "../db/init.ts";
 import { handleDiceCommand } from "./games.ts";
 import { handleMinecraftCommand } from "./minecraft.ts";
@@ -31,6 +31,9 @@ export function handleApplicationCommands(
 
     case Commands.Minecraft:
       return handleMinecraftCommand(data);
+
+    case Commands.WhoAmI:
+      return Promise.resolve(handleWhoAmICommand());
 
     default:
       return Promise.resolve({

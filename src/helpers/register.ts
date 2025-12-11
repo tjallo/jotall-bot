@@ -1,5 +1,5 @@
 import { RESTPostAPIApplicationCommandsJSONBody } from "discord-api-types/v10";
-import { PING_COMMAND } from "../commands/util.ts";
+import { PING_COMMAND, WHOAMI_COMMAND } from "../commands/util.ts";
 import { Log } from "./log.ts";
 import { encodeHex } from "@std/encoding";
 import { discordRequest } from "./discord_request.ts";
@@ -38,6 +38,7 @@ export async function registerCommands() {
     PING_COMMAND,
     DICE_COMMAND,
     MINECRAFT_COMMAND,
+    WHOAMI_COMMAND,
   ];
 
   const needsToBeRegistered = await commandsNeedToBeRegistered(
