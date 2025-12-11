@@ -7,12 +7,13 @@ import { Commands } from "../consts/commands.ts";
 import { handlePing } from "./util.ts";
 import { USER_SERVICE } from "../db/init.ts";
 import { handleDiceCommand } from "./games.ts";
+import { handleMinecraftCommand } from "./minecraft.ts";
 
 export function handleApplicationCommands(
   data: APIUserApplicationCommandInteractionData,
   user?: APIUser,
   member?: APIGuildMember,
-): { status: number; body: Record<string, unknown> } {
+): Promise<{ status: number; body: Record<string, unknown> }> {
   const { name } = data;
 
   const commandUser = member?.user ?? user;
@@ -23,12 +24,18 @@ export function handleApplicationCommands(
 
   switch (name) {
     case Commands.Ping:
-      return handlePing();
+      return Promise.resolve(handlePing());
 
     case Commands.Dice:
-      return handleDiceCommand(data);
+      return Promise.resolve(handleDiceCommand(data));
+
+    case Commands.Minecraft:
+      return handleMinecraftCommand(data);
 
     default:
-      return { status: 400, body: { error: "unknown command" } };
+      return Promise.resolve({
+        status: 400,
+        body: { error: "unknown command" },
+      });
   }
 }

@@ -25,7 +25,7 @@ function server() {
   app.post(
     "/interactions",
     verifyKeyMiddleware(Config.PUBLIC_KEY),
-    function (req, res) {
+    async function (req, res) {
       const interaction = req.body;
 
       if (interaction.type === InteractionType.Ping) {
@@ -33,8 +33,7 @@ function server() {
       }
 
       if (interaction.type === InteractionType.ApplicationCommand) {
-        // Pass both data and user/member info to your handler
-        const { status, body } = handleApplicationCommands(
+        const { status, body } = await handleApplicationCommands(
           interaction.data,
           interaction.user,
           interaction.member,

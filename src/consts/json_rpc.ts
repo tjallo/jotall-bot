@@ -2,7 +2,7 @@ export interface JsonRpcRequest {
   jsonrpc: "2.0";
   method: string;
   params?: unknown;
-  id?: string | number | null;
+  id?: number | null;
 }
 
 export interface JsonRpcResponse {
@@ -13,5 +13,5 @@ export interface JsonRpcResponse {
     message: string;
     data?: unknown;
   };
-  id: string | number | null;
+  id: number | null;
 }
