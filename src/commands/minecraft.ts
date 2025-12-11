@@ -39,7 +39,7 @@ export async function handleMinecraftCommand(data: {
   let content = "Unknown command.";
   const command = data.options?.at(0)?.name;
   switch (command) {
-    case "list-online-players": {
+    case SubCommands.ListOnlinePlayers: {
       const players = await ws.getOnlinePlayers();
       content = players.length
         ? `**Online players (${players.length}):**\n• ${
