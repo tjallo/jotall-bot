@@ -1,6 +1,8 @@
 import {
   ApplicationCommandOptionType,
   ApplicationCommandType,
+  ApplicationIntegrationType,
+  InteractionContextType,
   InteractionResponseType,
   RESTPostAPIApplicationCommandsJSONBody,
 } from "discord-api-types/v10";
@@ -27,6 +29,15 @@ export const DICE_COMMAND: RESTPostAPIApplicationCommandsJSONBody = {
       description: "Number of dice to roll (default 1)",
       required: false,
     },
+  ],
+  integration_types: [
+    ApplicationIntegrationType.GuildInstall,
+    ApplicationIntegrationType.UserInstall,
+  ],
+  contexts: [
+    InteractionContextType.BotDM,
+    InteractionContextType.Guild,
+    InteractionContextType.PrivateChannel,
   ],
 };
 
