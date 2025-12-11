@@ -6,10 +6,11 @@ import type {
 
 export function formatServerStatus(status: MinecraftServerStatus): string {
   const statusEmoji = status.started ? "🟢" : "🔴";
-  const playersEmoji = status.players.length > 0 ? "👥" : "👤";
+  const players = status.players ?? [];
+  const playersEmoji = players.length > 0 ? "👥" : "👤";
 
-  const playerSection = status.players.length
-    ? `\`\`\`\n${status.players.map((p) => p.name).join(", ")}\n\`\`\``
+  const playerSection = players.length
+    ? `\`\`\`\n${players.map((p) => p.name).join(", ")}\n\`\`\``
     : "*No players online*";
 
   return [
@@ -17,7 +18,7 @@ export function formatServerStatus(status: MinecraftServerStatus): string {
       status.started ? "Online" : "Offline"
     }** • v${status.version.name}`,
     "",
-    `${playersEmoji} **Players (${status.players.length}):**`,
+    `${playersEmoji} **Players (${players.length}):**`,
     playerSection,
   ].join("\n");
 }
