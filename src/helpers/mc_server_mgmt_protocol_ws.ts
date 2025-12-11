@@ -32,7 +32,7 @@ class MinecraftServerManagementProtocolWS {
 
       Log.debug("mc-ws:payload", payload);
 
-      if (payload.id != null && this.pending.has(payload.id)) {
+      if (payload.id !== null && this.pending.has(payload.id)) {
         const resolve = this.pending.get(payload.id)!;
         this.pending.delete(payload.id);
         resolve(payload);
