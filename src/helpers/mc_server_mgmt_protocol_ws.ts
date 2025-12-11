@@ -48,7 +48,7 @@ class MinecraftServerManagementProtocolWS {
     };
 
     this.ws.onerror = (ev: Event | unknown) => {
-      const err = (ev as any)?.error ?? ev;
+      const err = (ev as { error?: unknown }).error ?? ev;
       Log.error("mc-ws:error", { error: err });
     };
   }
