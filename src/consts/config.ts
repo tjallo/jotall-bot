@@ -1,33 +1,19 @@
 import * as path from "@std/path";
-import { MinecraftServerManagementProtocolWS } from "../helpers/mc_server_mgmt_protocol_ws.ts";
 
-function getEnvVar(name: string): string {
-  const value = Deno.env.get(name);
-  if (!value) {
-    throw new Error(`${name} not found in the environment`);
-  }
-  return value;
-}
+export const Config = {
+  APP_ID: Deno.env.get("APP_ID")!,
+  DISCORD_TOKEN: Deno.env.get("DISCORD_TOKEN")!,
+  PUBLIC_KEY: Deno.env.get("PUBLIC_KEY")!,
 
-export const APP_ID = getEnvVar("APP_ID");
-export const DISCORD_TOKEN = getEnvVar("DISCORD_TOKEN");
-export const PUBLIC_KEY = getEnvVar("PUBLIC_KEY");
+  MINECRAFT_SERVER_SECRET: Deno.env.get("MINECRAFT_SERVER_SECRET")!,
+  MINECRAFT_SERVER_IP: Deno.env.get("MINECRAFT_SERVER_IP")!,
+  MINECRAFT_MGMT_SERVER_PORT: Deno.env.get("MINECRAFT_MGMT_SERVER_PORT")!,
 
-export const MINECRAFT_SERVER_SECRET = getEnvVar("MINECRAFT_SERVER_SECRET");
-export const MINECRAFT_SERVER_IP = getEnvVar("MINECRAFT_SERVER_IP");
-export const MINECRAFT_MGMT_SERVER_PORT = getEnvVar(
-  "MINECRAFT_MGMT_SERVER_PORT",
-);
+  TMP_DIR: path.join(Deno.cwd(), "tmp"),
+  COMMAND_HASH_FILE: path.join(Deno.cwd(), "tmp", "command_hash.txt"),
+  LOG_DIR: path.join(Deno.cwd(), "log"),
+  DATA_DIR: path.join(Deno.cwd(), "data"),
 
-export const TMP_DIR = path.join(Deno.cwd(), "tmp");
-export const COMMAND_HASH_FILE = path.join(TMP_DIR, "command_hash.txt");
-
-export const LOG_DIR = path.join(Deno.cwd(), "log");
-
-export const DATA_DIR = path.join(Deno.cwd(), "data");
-
-export const PORT = 3000;
-
-const text = Deno.readTextFileSync("deno.json");
-const config = JSON.parse(text);
-export const JOTALL_VERSION = config.version;
+  PORT: 3000,
+  JOTALL_VERSION: JSON.parse(Deno.readTextFileSync("deno.json")).version,
+} as const;

@@ -1,20 +1,17 @@
-import {
-  MINECRAFT_MGMT_SERVER_PORT,
-  MINECRAFT_SERVER_IP,
-  MINECRAFT_SERVER_SECRET,
-} from "../consts/config.ts";
+import { Config } from "../consts/config.ts";
 import { JsonRpcResponse } from "../consts/json_rpc.ts";
 
 import { Log } from "./log.ts";
 
-export class MinecraftServerManagementProtocolWS {
+class MinecraftServerManagementProtocolWS {
   private ws: WebSocket;
 
   constructor() {
-    const wsUrl = `ws://${MINECRAFT_SERVER_IP}:${MINECRAFT_MGMT_SERVER_PORT}`;
+    const wsUrl =
+      `ws://${Config.MINECRAFT_SERVER_IP}:${Config.MINECRAFT_MGMT_SERVER_PORT}`;
 
     this.ws = new WebSocket(wsUrl, {
-      headers: { "Authorization": `Bearer ${MINECRAFT_SERVER_SECRET}` },
+      headers: { "Authorization": `Bearer ${Config.MINECRAFT_SERVER_SECRET}` },
     });
 
     this.ws.onopen = (ev: Event) => {
@@ -47,4 +44,18 @@ export class MinecraftServerManagementProtocolWS {
       Log.error("mc-ws:error", { error: err });
     };
   }
+
+  send(data: unknown) {
+    this.ws.send(JSON.stringify(data));
+  }
+}
+
+let wsInstance: MinecraftServerManagementProtocolWS | null = null;
+
+export function getMinecraftWS() {
+  if (!wsInstance) {
+    wsInstance = new MinecraftServerManagementProtocolWS();
+  }
+
+  return wsInstance;
 }

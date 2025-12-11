@@ -1,19 +1,13 @@
 import express from "express";
 import { verifyKeyMiddleware } from "discord-interactions";
 import { handleApplicationCommands } from "./src/commands/handler.ts";
-import {
-  JOTALL_VERSION,
-  PORT,
-  PUBLIC_KEY,
-  TMP_DIR,
-} from "./src/consts/config.ts";
+import { Config } from "./src/consts/config.ts";
 import { Log } from "./src/helpers/log.ts";
 import { registerCommands } from "./src/helpers/register.ts";
 import {
   InteractionResponseType,
   InteractionType,
 } from "discord-api-types/v10";
-import { MinecraftServerManagementProtocolWS } from "./src/helpers/mc_server_mgmt_protocol_ws.ts";
 
 function server() {
   const app = express();
@@ -21,7 +15,7 @@ function server() {
   app.get("/health", (_req, res) => {
     return res.status(200).json({
       "healthy": true,
-      "Jotall Bot version": JOTALL_VERSION,
+      "Jotall Bot version": Config.JOTALL_VERSION,
       "deno": Deno.version.deno,
       "typescript": Deno.version.typescript,
       "v8": Deno.version.v8,
@@ -30,7 +24,7 @@ function server() {
 
   app.post(
     "/interactions",
-    verifyKeyMiddleware(PUBLIC_KEY),
+    verifyKeyMiddleware(Config.PUBLIC_KEY),
     function (req, res) {
       const interaction = req.body;
 
@@ -67,17 +61,16 @@ function server() {
 }
 
 async function boot(): Promise<void> {
-  Deno.mkdirSync(TMP_DIR, { recursive: true });
+  Deno.mkdirSync(Config.TMP_DIR, { recursive: true });
   await registerCommands();
-  new MinecraftServerManagementProtocolWS();
 }
 
 async function main(): Promise<void> {
   await boot();
 
   const app = server();
-  app.listen(PORT, () => {
-    console.log("Listening on port", PORT);
+  app.listen(Config.PORT, () => {
+    console.log("Listening on port", Config.PORT);
   });
 }
 
