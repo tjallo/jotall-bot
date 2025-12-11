@@ -11,7 +11,7 @@ class MinecraftServerManagementProtocolWS {
 
   constructor() {
     const wsUrl =
-      `ws://${Config.MINECRAFT_SERVER_IP}:${Config.MINECRAFT_MGMT_SERVER_PORT}`;
+      `wss://${Config.MINECRAFT_SERVER_IP}:${Config.MINECRAFT_MGMT_SERVER_PORT}`;
 
     this.ws = new WebSocket(wsUrl, {
       headers: { "Authorization": `Bearer ${Config.MINECRAFT_SERVER_SECRET}` },
