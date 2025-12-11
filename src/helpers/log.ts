@@ -1,9 +1,9 @@
 // deno-lint-ignore-file no-explicit-any
-import { LOG_DIR } from "../consts/config.ts";
 import * as path from "@std/path";
+import { Config } from "../consts/config.ts";
 
 export class Log {
-  private static logDir = LOG_DIR;
+  private static logDir = Config.LOG_DIR;
 
   private static async ensureLogDir() {
     try {

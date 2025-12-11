@@ -4,19 +4,25 @@ import {
   InteractionResponseType,
   RESTPostAPIApplicationCommandsJSONBody,
 } from "discord-api-types/v10";
+import { Commands } from "../consts/commands.ts";
+
+enum DiceOptions {
+  Sides = "sides",
+  Count = "count",
+}
 
 export const DICE_COMMAND: RESTPostAPIApplicationCommandsJSONBody = {
-  name: "dice",
+  name: Commands.Dice,
   description: "Roll dice (default 1d6)",
   options: [
     {
-      name: "sides",
+      name: DiceOptions.Sides,
       type: ApplicationCommandOptionType.Integer,
       description: "Number of sides on each die (default 6)",
       required: false,
     },
     {
-      name: "count",
+      name: DiceOptions.Count,
       type: ApplicationCommandOptionType.Integer,
       description: "Number of dice to roll (default 1)",
       required: false,
@@ -45,8 +51,8 @@ export function handleDiceCommand(
     return defaultValue;
   }
 
-  let sides = getNumberOption("sides", 6);
-  let count = getNumberOption("count", 1);
+  let sides = getNumberOption(DiceOptions.Sides, 6);
+  let count = getNumberOption(DiceOptions.Count, 1);
 
   if (sides < 2) sides = 6;
   if (sides > 1000) sides = 1000;

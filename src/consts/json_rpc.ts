@@ -1,0 +1,17 @@
+export interface JsonRpcRequest {
+  jsonrpc: "2.0";
+  method: string;
+  params?: unknown;
+  id?: number | null;
+}
+
+export interface JsonRpcResponse {
+  jsonrpc: "2.0";
+  result?: unknown;
+  error?: {
+    code: number;
+    message: string;
+    data?: unknown;
+  };
+  id: number | null;
+}

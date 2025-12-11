@@ -3,8 +3,9 @@ import { PING_COMMAND } from "../commands/util.ts";
 import { Log } from "./log.ts";
 import { encodeHex } from "@std/encoding";
 import { discordRequest } from "./discord_request.ts";
-import { APP_ID, COMMAND_HASH_FILE, DISCORD_TOKEN } from "../consts/config.ts";
+import { Config } from "../consts/config.ts";
 import { DICE_COMMAND } from "../commands/games.ts";
+import { MINECRAFT_COMMAND } from "../commands/minecraft.ts";
 
 async function commandsNeedToBeRegistered(
   commands: Array<RESTPostAPIApplicationCommandsJSONBody>,
@@ -14,7 +15,7 @@ async function commandsNeedToBeRegistered(
   let prevHash: string | null = null;
   try {
     const decoder = new TextDecoder("utf-8");
-    const contents = Deno.readFileSync(COMMAND_HASH_FILE);
+    const contents = Deno.readFileSync(Config.COMMAND_HASH_FILE);
     prevHash = decoder.decode(contents);
   } catch (_) {
     prevHash = null;
@@ -27,7 +28,7 @@ async function commandsNeedToBeRegistered(
     return false;
   }
 
-  Deno.writeFileSync(COMMAND_HASH_FILE, new TextEncoder().encode(hash));
+  Deno.writeFileSync(Config.COMMAND_HASH_FILE, new TextEncoder().encode(hash));
 
   return true;
 }
@@ -36,6 +37,7 @@ export async function registerCommands() {
   const COMMANDS_TO_REGISTER: Array<RESTPostAPIApplicationCommandsJSONBody> = [
     PING_COMMAND,
     DICE_COMMAND,
+    MINECRAFT_COMMAND,
   ];
 
   const needsToBeRegistered = await commandsNeedToBeRegistered(
@@ -46,10 +48,10 @@ export async function registerCommands() {
     return;
   }
 
-  const endpoint = `applications/${APP_ID}/commands`;
+  const endpoint = `applications/${Config.APP_ID}/commands`;
 
   try {
-    const res = await discordRequest(endpoint, DISCORD_TOKEN, {
+    const res = await discordRequest(endpoint, Config.DISCORD_TOKEN, {
       method: "PUT",
       body: JSON.stringify(COMMANDS_TO_REGISTER),
     });
