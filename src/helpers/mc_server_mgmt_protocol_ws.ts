@@ -1,5 +1,10 @@
 import { Config } from "../consts/config.ts";
 import { JsonRpcRequest, JsonRpcResponse } from "../consts/json_rpc.ts";
+import {
+  MinecraftPlayer,
+  MinecraftServerStatus,
+  MinecraftTypedGameRule,
+} from "../consts/minecraft_types.ts";
 
 import { Log } from "./log.ts";
 
@@ -109,8 +114,56 @@ class MinecraftServerManagementProtocolWS {
     return promise;
   }
 
-  getOnlinePlayers(): Promise<Array<{ id: string; name: string }>> {
-    return this.rpc<Array<{ id: string; name: string }>>("minecraft:players");
+  async getOnlinePlayers() {
+    const players = await this.rpc<Array<MinecraftPlayer>>(
+      "minecraft:players",
+    );
+
+    return players.sort((a, b) => {
+      if (a.name < b.name) {
+        return -1;
+      }
+      if (a.name > b.name) {
+        return 1;
+      }
+      return 0;
+    });
+  }
+
+  async getAllowList() {
+    const allowlist = await this.rpc<Array<MinecraftPlayer>>(
+      "minecraft:allowlist",
+    );
+
+    return allowlist.sort((a, b) => {
+      if (a.name < b.name) {
+        return -1;
+      }
+      if (a.name > b.name) {
+        return 1;
+      }
+      return 0;
+    });
+  }
+
+  async getGameRules() {
+    const gameRules = await this.rpc<Array<MinecraftTypedGameRule>>(
+      "minecraft:gamerules",
+    );
+
+    return gameRules.sort((a, b) => {
+      if (a.key < b.key) {
+        return -1;
+      }
+      if (a.key > b.key) {
+        return 1;
+      }
+      return 0;
+    });
+  }
+
+  getServerStatus() {
+    return this.rpc<MinecraftServerStatus>("minecraft:server/status");
   }
 }
 

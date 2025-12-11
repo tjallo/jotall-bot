@@ -1,9 +1,12 @@
+// main.ts
+
 import express from "express";
 import { verifyKeyMiddleware } from "discord-interactions";
 import { handleApplicationCommands } from "./src/commands/handler.ts";
 import { Config } from "./src/consts/config.ts";
 import { Log } from "./src/helpers/log.ts";
 import { registerCommands } from "./src/helpers/register.ts";
+import { editOriginalInteractionResponse } from "./src/helpers/discord_api.ts";
 import {
   InteractionResponseType,
   InteractionType,
@@ -14,18 +17,18 @@ function server() {
 
   app.get("/health", (_req, res) => {
     return res.status(200).json({
-      "healthy": true,
+      healthy: true,
       "Jotall Bot version": Config.JOTALL_VERSION,
-      "deno": Deno.version.deno,
-      "typescript": Deno.version.typescript,
-      "v8": Deno.version.v8,
+      deno: Deno.version.deno,
+      typescript: Deno.version.typescript,
+      v8: Deno.version.v8,
     });
   });
 
   app.post(
     "/interactions",
     verifyKeyMiddleware(Config.PUBLIC_KEY),
-    async function (req, res) {
+    function (req, res) {
       const interaction = req.body;
 
       if (interaction.type === InteractionType.Ping) {
@@ -33,18 +36,12 @@ function server() {
       }
 
       if (interaction.type === InteractionType.ApplicationCommand) {
-        const { status, body } = await handleApplicationCommands(
-          interaction.data,
-          interaction.user,
-          interaction.member,
-        );
+        res.send({
+          type: InteractionResponseType.DeferredChannelMessageWithSource,
+        });
 
-        if (status !== 200) {
-          Log.error(body);
-          return res.status(status).json(body);
-        }
-
-        return res.send(body);
+        processCommandAsync(interaction);
+        return;
       }
 
       Log.error("unknown interaction type", interaction.type);
@@ -57,6 +54,32 @@ function server() {
   });
 
   return app;
+}
+
+async function processCommandAsync(interaction: {
+  token: string;
+  data: Parameters<typeof handleApplicationCommands>[0];
+  user?: Parameters<typeof handleApplicationCommands>[1];
+  member?: Parameters<typeof handleApplicationCommands>[2];
+}): Promise<void> {
+  try {
+    const response = await handleApplicationCommands(
+      interaction.data,
+      interaction.user,
+      interaction.member,
+    );
+
+    await editOriginalInteractionResponse(interaction.token, {
+      content: response.error ? `Error: ${response.error}` : response.content,
+      embeds: response.embeds,
+    });
+  } catch (error) {
+    Log.error("Failed to process command:", error);
+
+    editOriginalInteractionResponse(interaction.token, {
+      content: "An unexpected error occurred while processing your command.",
+    }).catch((e) => Log.error("Failed to send response:", e));
+  }
 }
 
 async function boot(): Promise<void> {

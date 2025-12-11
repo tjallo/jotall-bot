@@ -9,11 +9,17 @@ import { USER_SERVICE } from "../db/init.ts";
 import { handleDiceCommand } from "./games.ts";
 import { handleMinecraftCommand } from "./minecraft.ts";
 
+export interface CommandResponse {
+  content?: string;
+  embeds?: unknown[];
+  error?: string;
+}
+
 export function handleApplicationCommands(
   data: APIUserApplicationCommandInteractionData,
   user?: APIUser,
   member?: APIGuildMember,
-): Promise<{ status: number; body: Record<string, unknown> }> {
+): Promise<CommandResponse> {
   const { name } = data;
 
   const commandUser = member?.user ?? user;
@@ -36,9 +42,6 @@ export function handleApplicationCommands(
       return Promise.resolve(handleWhoAmICommand());
 
     default:
-      return Promise.resolve({
-        status: 400,
-        body: { error: "unknown command" },
-      });
+      return Promise.resolve({ error: "Unknown command" });
   }
 }
