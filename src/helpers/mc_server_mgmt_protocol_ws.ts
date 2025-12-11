@@ -109,8 +109,36 @@ class MinecraftServerManagementProtocolWS {
     return promise;
   }
 
-  getOnlinePlayers(): Promise<Array<{ id: string; name: string }>> {
-    return this.rpc<Array<{ id: string; name: string }>>("minecraft:players");
+  async getOnlinePlayers() {
+    const players = await this.rpc<Array<{ id: string; name: string }>>(
+      "minecraft:players",
+    );
+
+    return players.sort((a, b) => {
+      if (a.name < b.name) {
+        return -1;
+      }
+      if (a.name > b.name) {
+        return 1;
+      }
+      return 0;
+    });
+  }
+
+  async getAllowList() {
+    const allowlist = await this.rpc<Array<{ id: string; name: string }>>(
+      "minecraft:allowlist",
+    );
+
+    return allowlist.sort((a, b) => {
+      if (a.name < b.name) {
+        return -1;
+      }
+      if (a.name > b.name) {
+        return 1;
+      }
+      return 0;
+    });
   }
 }
 

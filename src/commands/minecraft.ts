@@ -13,19 +13,28 @@ import { Log } from "../helpers/log.ts";
 
 enum SubCommands {
   ListOnlinePlayers = "list-online-players",
+  AllowList = "get-allow-list",
 }
+
+const mappedSubCommands = [
+  {
+    name: SubCommands.ListOnlinePlayers,
+    description: "List currently online players",
+  },
+  {
+    name: SubCommands.AllowList,
+    description: "Get players that are currently on the allow list",
+  },
+];
 
 export const MINECRAFT_COMMAND: RESTPostAPIApplicationCommandsJSONBody = {
   name: Commands.Minecraft,
   description: "Minecraft helper commands",
-  options: [
-    {
-      name: SubCommands.ListOnlinePlayers,
-      description: "List currently online players",
-      type: ApplicationCommandOptionType.Subcommand,
-      options: [],
-    },
-  ],
+  options: mappedSubCommands.map((sc) => ({
+    ...sc,
+    type: ApplicationCommandOptionType.Subcommand,
+    options: [],
+  })),
   integration_types: [
     ApplicationIntegrationType.GuildInstall,
     ApplicationIntegrationType.UserInstall,
@@ -55,6 +64,16 @@ export async function handleMinecraftCommand(data: {
       content = players.length
         ? `**Online players (${players.length}):**\n• ${
           players.map((p) => p.name).join("\n• ")
+        }`
+        : "No players online right now.";
+      break;
+    }
+
+    case SubCommands.AllowList: {
+      const allowList = await ws.getAllowList();
+      content = allowList.length
+        ? `**Players on allow list (${allowList.length}):**\n• ${
+          allowList.map((p) => p.name).join("\n• ")
         }`
         : "No players online right now.";
       break;
