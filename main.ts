@@ -13,6 +13,7 @@ import {
   InteractionResponseType,
   InteractionType,
 } from "discord-api-types/v10";
+import { MinecraftServerManagementProtocolWS } from "./src/helpers/mc_server_mgmt_protocol_ws.ts";
 
 function server() {
   const app = express();
@@ -68,6 +69,7 @@ function server() {
 async function boot(): Promise<void> {
   Deno.mkdirSync(TMP_DIR, { recursive: true });
   await registerCommands();
+  new MinecraftServerManagementProtocolWS();
 }
 
 async function main(): Promise<void> {
