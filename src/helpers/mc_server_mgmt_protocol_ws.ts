@@ -2,6 +2,7 @@ import { Config } from "../consts/config.ts";
 import { JsonRpcRequest, JsonRpcResponse } from "../consts/json_rpc.ts";
 import {
   MinecraftPlayer,
+  MinecraftServerStatus,
   MinecraftTypedGameRule,
 } from "../consts/minecraft_types.ts";
 
@@ -159,6 +160,10 @@ class MinecraftServerManagementProtocolWS {
       }
       return 0;
     });
+  }
+
+  getServerStatus() {
+    return this.rpc<MinecraftServerStatus>("minecraft:server/status");
   }
 }
 

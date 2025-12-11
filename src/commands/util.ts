@@ -47,5 +47,6 @@ export function handleWhoAmICommand(): CommandResponse {
 Check the code, report issues or contribute on GitHub: https://github.com/tjallo/jotall-bot
 
 Thanks for using Jotall — drop a feature request or bug report on the repo!`;
+
   return { content };
 }

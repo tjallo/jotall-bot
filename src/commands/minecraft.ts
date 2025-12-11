@@ -10,11 +10,18 @@ import { Commands } from "../consts/commands.ts";
 import { getMinecraftWS } from "../helpers/mc_server_mgmt_protocol_ws.ts";
 import { Log } from "../helpers/log.ts";
 import type { CommandResponse } from "./handler.ts";
+import {
+  formatAllowList,
+  formatGameRules,
+  formatOnlinePlayers,
+  formatServerStatus,
+} from "../helpers/minecraft_formatters.ts";
 
 enum SubCommands {
   ListOnlinePlayers = "list-online-players",
   AllowList = "get-allow-list",
   GameRules = "get-game-rules",
+  ServerStatus = "get-server-status",
 }
 
 const mappedSubCommands = [
@@ -29,6 +36,10 @@ const mappedSubCommands = [
   {
     name: SubCommands.GameRules,
     description: "Get gamerules for server",
+  },
+  {
+    name: SubCommands.ServerStatus,
+    description: "Get server status",
   },
 ];
 
@@ -60,44 +71,31 @@ export async function handleMinecraftCommand(data: {
   type: ApplicationCommandType;
 }): Promise<CommandResponse> {
   const ws = getMinecraftWS();
-
-  let content = "Unknown command.";
   const command = data.options?.at(0)?.name;
 
   switch (command) {
     case SubCommands.ListOnlinePlayers: {
       const players = await ws.getOnlinePlayers();
-      content = players.length
-        ? `**Online players (${players.length}):**\n• ${
-          players.map((p) => p.name).join("\n• ")
-        }`
-        : "No players online right now.";
-      break;
+      return { content: formatOnlinePlayers(players) };
     }
 
     case SubCommands.AllowList: {
       const allowList = await ws.getAllowList();
-      content = allowList.length
-        ? `**Players on allow list (${allowList.length}):**\n• ${
-          allowList.map((p) => p.name).join("\n• ")
-        }`
-        : "No players on allow list.";
-      break;
+      return { content: formatAllowList(allowList) };
     }
 
     case SubCommands.GameRules: {
       const gameRules = await ws.getGameRules();
-      content = gameRules.length
-        ? `**Gamerules (${gameRules.length}):**\n• ${
-          gameRules.map((r) => `${r.key}: ${r.value}`).join("\n• ")
-        }`
-        : "No gamerules found for server.";
-      break;
+      return { content: formatGameRules(gameRules) };
+    }
+
+    case SubCommands.ServerStatus: {
+      const status = await ws.getServerStatus();
+      return { content: formatServerStatus(status) };
     }
 
     default:
       Log.error(`Unknown command found: ${command}`);
+      return { error: `Unknown subcommand: ${command}` };
   }
-
-  return { content };
 }
